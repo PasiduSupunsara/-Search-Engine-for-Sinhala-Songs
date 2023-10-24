@@ -14,7 +14,7 @@ public class ProductService {
     public Iterable<Product> getPrduct(){
         return productRepo.findAll();
     }
-    public Product insertPrduct(Product product){
+    public Product insertProduct(Product product){
         return productRepo.save(product);
     }
     public void deletePrduct(int id){

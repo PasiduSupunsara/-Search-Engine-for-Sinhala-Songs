@@ -1,27 +1,21 @@
 import React, { useState } from 'react';
-import { Checkbox } from 'antd';
+import { Select, Space } from 'antd';
 
 
 export const Search =() =>{
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [songs, setSongs] = useState([]);
+  
 
-  const songs = [
-    "Song 1",
-    "Song 2",
-    "Song 3",
-    "Song 4",
-    "Song 5"
-  ];
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
 
   const handleSearch = () => {
     const filteredSongs = songs.filter(song => song.toLowerCase().includes(searchTerm.toLowerCase()));
     setSearchResults(filteredSongs);
     console.log(searchTerm)
-  };
-
-  const onChange = (e) => {
-    console.log(`checked = ${e.target.checked}`);
   };
 
   return (
@@ -37,14 +31,29 @@ export const Search =() =>{
           />
           <button className="search-button" onClick={handleSearch}>Search</button>
         </div>
-        <div className='check'>
-          <Checkbox onChange={onChange}>Title</Checkbox>
-          <Checkbox onChange={onChange}>Lyricist</Checkbox>
-          <Checkbox onChange={onChange}>Year</Checkbox>
-          <Checkbox onChange={onChange}>Metaphor</Checkbox>
-          <Checkbox onChange={onChange}>Meaning</Checkbox>
-          
-        </div>
+        <Space wrap>
+    <Select
+      defaultValue="lucy"
+      style={{
+        width: 120,
+      }}
+      onChange={handleChange}
+      options={[
+        {
+          value: 'jack',
+          label: 'Jack',
+        },
+        {
+          value: 'lucy',
+          label: 'Lucy',
+        },
+        {
+          value: 'Yiminghe',
+          label: 'yiminghe',
+        },
+      ]}
+    />    
+  </Space>
           
         
 

@@ -6,19 +6,20 @@ export const GetSong = () => {
     const[songs,setSongs] = useState([]);
 
     useEffect(()=>{
-        fetch('http://localhost:8080/apis/findall',{
+        fetch('http://localhost:8080/songs/matchAllSongs',{
              method:"GET"
            }).then((response)=>
            response.json())
            .then((result)=>{
-            setSongs(result.content);
+            setSongs(result);
             console.log(songs)
        })
-    },[songs]);
+    },[]);
+  
 
     
     return (
-        <>{songs.map((song) => <SongCard title={song.name} id={song.id} price={song.price}
+        <>{songs.map((song) => <SongCard name={song.name} lyrisc={song.lyrisc}
         />)}
         </>
        

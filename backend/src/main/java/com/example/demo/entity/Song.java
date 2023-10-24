@@ -9,14 +9,10 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Document(indexName = "products")
+@Document(indexName = "songs")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Product {
-
+public class Song {
     private int id;
     private String name;
-    private String description;
-    private int quantity;
-    private double price;
-
+    private String lyrisc;
 }

@@ -18,14 +18,14 @@ public class ElasticSearchUtil {
         return matchAllQuery.build();
     }
 
-    public static Supplier<Query> supplierWithNameField(String fieldValue){
-        Supplier<Query> supplier = ()->Query.of(q->q.match(matchQueryWithNameField(fieldValue)));
+    public static Supplier<Query> supplierWithField(String fieldValue, String field){
+        Supplier<Query> supplier = ()->Query.of(q->q.match(matchQueryWithField(fieldValue, field)));
         return supplier;
     }
 
-    public static MatchQuery matchQueryWithNameField(String fieldValue){
+    public static MatchQuery matchQueryWithField(String fieldValue, String field){
         val  matchQuery = new MatchQuery.Builder();
-        return matchQuery.field("name").query(fieldValue).build();
+        return matchQuery.field(field).query(fieldValue).build();
     }
 
     public static Supplier<Query> createSupplierQuery(String approximateProductName){
@@ -37,6 +37,17 @@ public class ElasticSearchUtil {
     public static FuzzyQuery createFuzzyQuery(String approximateProductName){
         val fuzzyQuery  = new FuzzyQuery.Builder();
         return  fuzzyQuery.field("name").value(approximateProductName).build();
+
+    }
+
+    public static Supplier<Query> createSupplierAutoSuggest(String partialProductName){
+
+        Supplier<Query> supplier = ()->Query.of(q->q.match(createAutoSuggestMatchQuery(partialProductName)));
+        return  supplier;
+    }
+    public static MatchQuery createAutoSuggestMatchQuery(String partialProductName){
+        val autoSuggestQuery = new MatchQuery.Builder();
+        return  autoSuggestQuery.field("name").query(partialProductName).analyzer("standard").build();
 
     }
 }

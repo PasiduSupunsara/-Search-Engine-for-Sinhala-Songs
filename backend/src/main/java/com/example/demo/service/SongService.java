@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Product;
 import com.example.demo.entity.Song;
 import com.example.demo.repo.SongRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,5 +12,9 @@ public class SongService {
     private SongRepo songRepo;
     public Song insertSong(Song song){
         return songRepo.save(song);
+    }
+
+    public void deleteSong(int id){
+        songRepo.deleteById(id);
     }
 }

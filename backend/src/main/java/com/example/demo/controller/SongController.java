@@ -29,6 +29,11 @@ public class SongController {
         return songService.insertSong(song);
     }
 
+    @DeleteMapping("/delete")
+    public void delete(@RequestBody Song song){
+        songService.deleteSong(song.getId());
+    }
+
     @GetMapping("/matchAllSongs")
     public List<Song> matchAllSongs() throws IOException {
         SearchResponse<Song> searchResponse =  elasticSearchService.matchAllSongsServices();
@@ -42,9 +47,9 @@ public class SongController {
         return listOfProducts;
     }
 
-    @GetMapping("/matchNameAllSongs")
+    @PostMapping("/matchLyristicsAllSongs")
     public List<Song> matchAllProductsWithName(@RequestBody MatchField matchField) throws IOException {
-        SearchResponse<Song> searchResponse =  elasticSearchService.matchSongsWithName(matchField.getFieldValue());
+        SearchResponse<Song> searchResponse =  elasticSearchService.matchSongsWithName(matchField.getFieldValue(), matchField.getField());
         System.out.println(searchResponse.hits().hits().toString());
 
         List<Hit<Song>> listOfHits= searchResponse.hits().hits();
@@ -65,6 +70,21 @@ public class SongController {
             productList.add(hit.source());
         }
         return productList;
+    }
+
+    @GetMapping("/autoSuggest/{partialProductName}")
+    List<String> autoSuggestProductSearch(@PathVariable String partialProductName) throws IOException {
+        SearchResponse<Song> searchResponse = elasticSearchService.autoSuggestSong(partialProductName);
+        List<Hit<Song>> hitList  =  searchResponse.hits().hits();
+        List<Song> productList = new ArrayList<>();
+        for(Hit<Song> hit : hitList){
+            productList.add(hit.source());
+        }
+        List<String> listOfProductNames = new ArrayList<>();
+        for(Song product : productList){
+            listOfProductNames.add(product.getLyricists());
+        }
+        return listOfProductNames;
     }
 
 }

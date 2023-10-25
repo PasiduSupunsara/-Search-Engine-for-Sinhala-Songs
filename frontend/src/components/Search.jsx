@@ -1,22 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Card } from "antd";
 import { Select, Space } from 'antd';
 
 
 export const Search =() =>{
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [songs, setSongs] = useState([]);
+  const [searchTick, setSearchTick] = useState('lyricists');
+
   
+  const [songs, setSongs] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/songs/matchAllSongs')
+      .then((response) => response.json())
+      .then((data) => setSongs(data))
+      .catch((error) => console.error('Error fetching data: ', error));
+  }, []);
+ 
+  const handleSearch = (search) => {
+    setSearchTerm(search)
+    const val = {searchTerm}
+    console.log(val)
+
+    fetch('http://localhost:8080/songs/matchLyristicsAllSongs',{
+          method:"POST",
+          headers:{"Content-Type":"application/json"
+        },
+          body:JSON.stringify(val)
+      }).then((response)=>{
+        console.log(response)
+        
+    })
+  };
 
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    setSearchTick(value)
   };
 
-  const handleSearch = () => {
-    const filteredSongs = songs.filter(song => song.toLowerCase().includes(searchTerm.toLowerCase()));
-    setSearchResults(filteredSongs);
-    console.log(searchTerm)
-  };
+
+
 
   return (
     <div className="search">
@@ -30,45 +52,45 @@ export const Search =() =>{
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button className="search-button" onClick={handleSearch}>Search</button>
-        </div>
-        <Space wrap>
+
+          <Space className='drop'>
     <Select
-      defaultValue="lucy"
+      defaultValue="lyricists"
       style={{
         width: 120,
       }}
       onChange={handleChange}
       options={[
         {
-          value: 'jack',
-          label: 'Jack',
+          value: 'Year',
+          label: 'Year',
         },
         {
-          value: 'lucy',
-          label: 'Lucy',
+          value: 'lyricists',
+          label: 'lyricists',
         },
         {
-          value: 'Yiminghe',
-          label: 'yiminghe',
+          value: 'lyrisc',
+          label: 'lyrisc',
         },
       ]}
-    />    
+    />
+    
   </Space>
-          
+        </div>
+       
+       
         
+  <div className="App">
+      <h1>Song List</h1>
 
-      <div className="results">
-        <h2>Search Results</h2>
-        <ul>
-          {searchResults.length === 0 ? (
-            <p>No results found</p>
-          ) : (
-            searchResults.map((song, index) => (
-              <li key={index}>{song}</li>
-            ))
-          )}
-        </ul>
-      </div>
+      {songs.map((song) => (
+        <Card key={song.id} title={song.songNameInSinahala}>
+          <p>Year: {song.year}</p>
+          <p>Lyricists: {song.lyricists}</p>
+        </Card>
+      ))}
+    </div>
     </div>
   );
 }

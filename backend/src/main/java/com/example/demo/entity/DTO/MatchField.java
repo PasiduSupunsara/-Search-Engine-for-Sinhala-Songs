@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class MatchField {
     public String fieldValue;
+    public String field;
 }
